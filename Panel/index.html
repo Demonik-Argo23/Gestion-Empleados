@@ -1,0 +1,35 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Empleados - Iniciar Sesión</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Gestión de Empleados</h1>
+        
+        <div class="login-section" id="loginSection">
+            <h2>Iniciar Sesión</h2>
+            <input type="password" id="password" placeholder="Contraseña">
+            <button onclick="login()">Ingresar</button>
+        </div>
+        
+        <div class="employee-section" id="employeeSection" style="display:none;">
+            <button onclick="fetchEmployees()">Ver Empleados</button>
+            <div id="employeeList"></div>
+            
+            <h3>Agregar Nuevo Empleado</h3>
+            <input type="text" id="nombre" placeholder="Nombre">
+            <input type="text" id="apellidos" placeholder="Apellidos">
+            <input type="text" id="telefono" placeholder="Teléfono">
+            <input type="email" id="correo" placeholder="Correo">
+            <input type="text" id="direccion" placeholder="Dirección">
+            <button onclick="addEmployee()">Agregar Empleado</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
