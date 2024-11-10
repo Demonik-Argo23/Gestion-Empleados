@@ -1,35 +1,40 @@
+// admin.js
+
 window.onload = init;
+
 var headers = {};
 var url = "http://localhost:3000/";
 
 function init() {
-    if(localStorage.getItem("token")){
+    // Verifica si el usuario tiene un token válido
+    if (localStorage.getItem("token")) {
         headers = {
             headers: {
-                'Authorization': "bearer " + localStorage.getItem("token")
+                'Authorization': "Bearer " + localStorage.getItem("token")
             }
-        }
-        loademployee();
-    }
-    else {
+        };
+
+        // Cargar empleados al iniciar
+        loadEmployees();
+
+        // Event listeners para botones
+        document.querySelector('.btn-primary[data-action="add"]').addEventListener('click', () => {
+            window.location.href = "addemployees.html";
+        });
+        document.querySelector('.btn-primary[data-action="edit"]').addEventListener('click', () => {
+            window.location.href = "editemployees.html";
+        });
+        document.querySelector('.btn-danger[data-action="delete"]').addEventListener('click', () => {
+            window.location.href = "deleteemployees.html";
+        });
+        document.querySelector('.btn-secondary[data-action="logout"]').addEventListener('click', logout);
+    } else {
+        // Redirecciona a la página de inicio de sesión si no hay token
         window.location.href = "index.html";
     }
 }
-
-function loademployee() {
-    axios.get(url + "/employees", headers)
-    .then(function(res) {
-        console.log(res);
-        displayPokemon(res.data.message);
-    })
-    .catch(function(err) {
-        console.log(err);
-    });
-}
-
-function displayemployee(employees) {
-    var body = document.querySelector("body");
-    for(var i = 0; i < employees.length; i++) {
-        body.innerHTML += <h3>${employees[i].nombre}</h3>;
-    }
+function logout() {
+    // Elimina el token de localStorage y redirige a la página de inicio de sesión
+    localStorage.removeItem("token");
+    window.location.href = "index.html";
 }
