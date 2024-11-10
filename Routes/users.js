@@ -29,8 +29,8 @@ users.post("/login", async(req,res,next) => {
     if (username && password) {
         if (rows.length == 1) {
             const token = jwt.sign({
-                name: rows[0].name,
-                password: rows[0].password
+                id: rows[0].id,
+                username: rows[0].username
             }, "debugkey");
             return res.status(200).json({code: 200 , message: token })
         }

@@ -20,7 +20,7 @@ app.get("/", index);
 
 app.use("/users", users);
 
-//app.use(auth);
+app.use(auth);
 
 app.use("/employees", employees); 
 
