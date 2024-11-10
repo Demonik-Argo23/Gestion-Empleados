@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modificar Empleado</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1>Modificar Empleado</h1>
+        <div class="form-group">
+            <label for="id">ID del Empleado:</label>
+            <input type="number" class="form-control" id="id" placeholder="ID del empleado">
+        </div>
+        <div class="form-group">
+            <label for="nombre">Nombre:</label>
+            <input type="text" class="form-control" id="nombre" placeholder="Nombre del empleado">
+        </div>
+        <div class="form-group">
+            <label for="apellidos">Apellidos:</label>
+            <input type="text" class="form-control" id="apellidos" placeholder="Apellidos del empleado">
+        </div>
+        <button class="btn btn-primary" onclick="editEmployee()">Modificar</button>
+    </div>
+    <script src="js/editEmployee.js"></script>
+</body>
+</html>

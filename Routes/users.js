@@ -6,9 +6,9 @@ const db = require('../config/database');
 users.post("/register", async (req, res, next) => {
     const { username, password, role } = req.body;
 
-    if (username && password && role) {
-        let query = "INSERT INTO users (username, password, role) ";
-        query += `VALUES ('${username}', '${password}', '${role}');`;
+    if (username && password) {
+        let query = "INSERT INTO users (username, password) ";
+        query += `VALUES ('${username}', '${password}');`;
         const rows = await db.query(query);
 
         if (rows.affectedRows == 1) {
