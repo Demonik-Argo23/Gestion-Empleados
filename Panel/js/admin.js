@@ -19,6 +19,9 @@ function init() {
 
         // Event listeners para botones
         document.querySelector('.btn-primary[data-action="add"]').addEventListener('click', () => {
+            window.location.href = "signin.html";
+        });
+        document.querySelector('.btn-primary[data-action="add"]').addEventListener('click', () => {
             window.location.href = "addemployees.html";
         });
         document.querySelector('.btn-primary[data-action="edit"]').addEventListener('click', () => {

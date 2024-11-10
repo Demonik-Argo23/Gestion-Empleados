@@ -3,13 +3,13 @@ window.onload = init;
 
 function init() {
     if (localStorage.getItem("token")) {
-        document.querySelector('.btn-primary').addEventListener('click', editEmployee);
+        document.querySelector('.btn-primary').addEventListener('click', editemployees);
     } else {
         window.location.href = "index.html";
     }
 }
 
-function editEmployee() {
+function editemployees() {
     // Obtén el ID del empleado que se desea editar
     const employeeId = document.getElementById("input-id").value;
 

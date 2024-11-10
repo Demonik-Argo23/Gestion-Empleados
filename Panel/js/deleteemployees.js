@@ -3,21 +3,15 @@ window.onload = init;
 
 function init() {
     if (localStorage.getItem("token")) {
-        document.querySelector('.btn-primary').addEventListener('click', deleteEmployee);
+        document.querySelector('.btn-danger').addEventListener('click', deleteemployees);
     } else {
         window.location.href = "index.html";
     }
 }
 
-function deleteEmployee() {
+function deleteemployees() {
     // Obtén el ID del empleado que se desea eliminar
     const employeeId = document.getElementById("input-id").value;
-
-    if (!employeeId) {
-        alert("Por favor, ingresa el ID del empleado a eliminar");
-        return;
-    }
-
     // Realiza la solicitud DELETE para eliminar al empleado
     axios({
         method: 'delete',
@@ -39,3 +33,4 @@ function deleteEmployee() {
         console.error("Error en la solicitud: ", err);
     });
 }
+
