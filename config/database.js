@@ -7,6 +7,7 @@ const pool = mysql.createPool({
     user: 'root',
     password: '',
     database: 'gestion_empleados',
+    port:3333,
 });
 
 pool.query = util.promisify(pool.query);

@@ -1,89 +1,138 @@
 const express = require('express');
-const employees= express.Router();
-const  db  = require('../config/database');
+const employees = express.Router();
+const db = require('../config/database');
 
+// Crear empleado con nuevos campos
+employees.post("/", async (req, res, next) => {
+    const {
+        nombre, apellidos, telefono, correo, direccion,
+        fecha_nacimiento, curp, rfc, horario, sueldo, puesto, antiguedad
+    } = req.body;
 
-employees.post("/", async (req,res,next) => {
-    const { nombre, apellidos, telefono, correo, direccion } = req.body;
-
-    if(nombre && apellidos && telefono && correo && direccion) {
-        let query = "INSERT INTO employees (nombre, apellidos, telefono, correo, direccion)";
-        query += ` VALUES('${nombre}', '${apellidos}', '${telefono}', '${correo}', '${direccion}')`;
-        const rows = await db.query(query);
-
-        if(rows.affectedRows == 1) {
-            return res.status(201).json({code: 201 , message: "Empleado insertado correctamente"});
+    if (nombre && apellidos && telefono && correo && direccion &&
+        fecha_nacimiento && curp && rfc && horario && sueldo && puesto && antiguedad) {
+        let query = `
+            INSERT INTO employees
+            (nombre, apellidos, telefono, correo, direccion, fecha_nacimiento, curp, rfc, horario, sueldo, puesto, antiguedad)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        `;
+        const rows = await db.query(query, [
+            nombre, apellidos, telefono, correo, direccion,
+            fecha_nacimiento, curp, rfc, horario, sueldo, puesto, antiguedad
+        ]);
+        if (rows.affectedRows == 1) {
+            return res.status(201).json({ code: 201, message: "Empleado agregado correctamente" });
         }
-        return res.status(500).json({code: 500 , message: "Ocurrio un error"});
+        return res.status(500).json({ code: 500, message: "Error al agregar empleado" });
     }
-     return res.status(500).json({code: 500 , message: "Campos Incompletos"});
+    return res.status(500).json({ code: 500, message: "Campos Incompletos" });
 });
 
-employees.delete("/:id([0-9]{1,3})", async (req,res,next) => {
+// Eliminar empleado (sin cambios)
+employees.delete("/:id([0-9]{1,3})", async (req, res, next) => {
     const query = `DELETE FROM employees WHERE id=${req.params.id}`;
     const rows = await db.query(query)
-
     if (rows.affectedRows == 1) {
-        return res.status(200).json({code: 200 , message: "Empleado borrado correctamente" });
+        return res.status(200).json({ code: 200, message: "Empleado eliminado correctamente" });
     }
-    return res.status(404).json({code: 404 , message: "Empleado no encontrado" });
-})
-employees.put("/:id([0-9]{1,3})", async(req, res, next) => {
-    const { nombre, apellidos, telefono, correo, direccion } = req.body;
-
-    if(nombre && apellidos && telefono && correo && direccion) {
-        let query = `UPDATE employees SET nombre='${nombre}', apellidos='${apellidos}', `;
-        query += `telefono='${telefono}', correo='${correo}', direccion='${direccion}' WHERE id=${req.params.id};`;
-        
-        const rows = await db.query(query);
-
-        if(rows.affectedRows == 1) {
-            return res.status(200).json({code: 200 , message: "Empleado actualizado correctamente"});
-        }
-        return res.status(500).json({code: 500 , message: "Ocurrio un error"});
-    }
-     return res.status(500).json({code: 500 , message: "Campos Incompletos"});
+    return res.status(404).json({ code: 404, message: "Empleado no encontrado" });
 });
-employees.patch("/:id([0-9]{1,3})", async (req, res, next) => {
-    if (req.body.nombre) {
-        let query = `UPDATE employees SET nombre='${req.body.nombre}' WHERE id=${req.params.id}`;
-        const rows = await db.query(query);
 
+// Actualizar empleado con nuevos campos
+employees.put("/:id([0-9]{1,3})", async (req, res, next) => {
+    const {
+        nombre, apellidos, telefono, correo, direccion,
+        fecha_nacimiento, curp, rfc, horario, sueldo, puesto, antiguedad
+    } = req.body;
+
+    if (nombre && apellidos && telefono && correo && direccion &&
+        fecha_nacimiento && curp && rfc && horario && sueldo && puesto && antiguedad) {
+        let query = `
+            UPDATE employees SET
+            nombre=?, apellidos=?, telefono=?, correo=?, direccion=?,
+            fecha_nacimiento=?, curp=?, rfc=?, horario=?, sueldo=?, puesto=?, antiguedad=?
+            WHERE id=?
+        `;
+        const rows = await db.query(query, [
+            nombre, apellidos, telefono, correo, direccion,
+            fecha_nacimiento, curp, rfc, horario, sueldo, puesto, antiguedad, req.params.id
+        ]);
         if (rows.affectedRows == 1) {
             return res.status(200).json({ code: 200, message: "Empleado actualizado correctamente" });
         }
+        return res.status(404).json({ code: 404, message: "Empleado no encontrado" });
+    }
+    return res.status(500).json({ code: 500, message: "Campos Incompletos" });
+});
 
-        return res.status(500).json({ code: 500, message: "Ocurrió un error" });
+// PATCH (actualización parcial, ejemplo solo nombre)
+employees.patch("/:id([0-9]{1,3})", async (req, res, next) => {
+    if (req.body.nombre) {
+        let query = `UPDATE employees SET nombre=? WHERE id=?`;
+        const rows = await db.query(query, [req.body.nombre, req.params.id]);
+        if (rows.affectedRows == 1) {
+            return res.status(200).json({ code: 200, message: "Nombre actualizado correctamente" });
+        }
+        return res.status(404).json({ code: 404, message: "Empleado no encontrado" });
     }
     return res.status(500).json({ code: 500, message: "Campos incompletos" });
 });
 
-employees.get('/', async (req,res,next) => {
+// Obtener todos los empleados
+employees.get('/', async (req, res, next) => {
     const gstn = await db.query("SELECT * FROM employees");
-    return res.status(200).json({code: 1 , message: gstn});
+    return res.status(200).json({ code: 1, message: gstn });
 });
 
-employees.get('/:id([0-9]{1,3})', async (req,res,next) => {
+// Búsqueda flexible por id, nombre y/o puesto
+employees.get('/search', async (req, res, next) => {
+    const { id, nombre, puesto } = req.query;
+    let query = "SELECT * FROM employees WHERE 1=1";
+    let params = [];
+
+    if (id) {
+        query += " AND id = ?";
+        params.push(id);
+    }
+    if (nombre) {
+        query += " AND nombre LIKE ?";
+        params.push('%' + nombre + '%');
+    }
+    if (puesto) {
+        query += " AND puesto = ?";
+        params.push(puesto);
+    }
+
+    try {
+        const rows = await db.query(query, params);
+        res.json({ code: 200, message: rows });
+    } catch (err) {
+        res.status(500).json({ code: 500, message: "Error en la búsqueda", error: err });
+    }
+});
+
+// Obtener empleado por ID
+employees.get('/:id([0-9]{1,3})', async (req, res, next) => {
     const id = req.params.id;
-    if (id >= 0 && id <= 722){
-        const gstn = await db.query("SELECT * FROM employees WHERE id="+id);
-        return res.status(200).json({ code: 1, message: gstn});
-    }
-    else {
-        return res.status(404).send({code: 404, message: "Empleado no encontrado" });
+    if (id >= 0 && id <= 722) {
+        const gstn = await db.query("SELECT * FROM employees WHERE id = ?", [id]);
+        if (gstn.length > 0) {
+            return res.status(200).json({ code: 1, message: gstn[0] });
+        }
+        return res.status(404).json({ code: 404, message: "Empleado no encontrado" });
+    } else {
+        return res.status(400).json({ code: 400, message: "ID fuera de rango" });
     }
 });
 
+// Obtener empleados por nombre
 employees.get('/:name([A-Za-z]+)', async (req, res, next) => {
     const nombre = req.params.name;
     const gstn = await db.query("SELECT * FROM employees WHERE nombre = ?", [nombre]);
-    
-    console.log(nombre);
     if (gstn.length > 0) {
-        return res.status(200).json(gstn);
+        return res.status(200).json({ code: 1, message: gstn });
     }
-    return res.status(404).send("Empleado no encontrado");
+    return res.status(404).json({ code: 404, message: "Empleado no encontrado" });
 });
-
 
 module.exports = employees;

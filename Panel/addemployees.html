@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,31 +8,92 @@
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
+
 <body>
+    <!-- Header de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <a class="navbar-brand font-weight-bold text-" href="admin.html">Regresar a Inicio</a>
+        <div>
+            <button class="btn btn-outline-primary mr-2" onclick="window.location.href='addemployees.html'">Agregar Empleado</button>
+            <button class="btn btn-outline-primary mr-2" onclick="window.location.href='showemployees.html'">Ver Empleados</button>
+            <button class="btn btn-outline-primary mr-2" onclick="window.location.href='searchname.html'">Buscar por Nombre</button>
+            <button class="btn btn-outline-primary mr-2" onclick="window.location.href='editemployees.html'">Modificar Empleado</button>
+            <button class="btn btn-outline-primary mr-2" onclick="window.location.href='deleteemployees.html'">Eliminar Empleado</button>
+        </div>
+    </nav>
+
     <div class="container mt-5">
         <h1>Agregar Empleado</h1>
-        <div class="form-group">
-            <label for="nombre">Nombre:</label>
-            <input type="text" class="form-control" id="input-nombre" placeholder="Nombre del empleado">
-        </div>
-        <div class="form-group">
-            <label for="apellidos">Apellidos:</label>
-            <input type="text" class="form-control" id="input-apellidos" placeholder="Apellidos del empleado">
-        </div>
-        <div class="form-group">
-            <label for="telefono">Teléfono:</label>
-            <input type="text" class="form-control" id="input-telefono" placeholder="Teléfono del empleado">
-        </div>
-        <div class="form-group">
-            <label for="correo">Correo:</label>
-            <input type="email" class="form-control" id="input-correo" placeholder="Correo del empleado">
-        </div>
-        <div class="form-group">
-            <label for="direccion">Dirección:</label>
-            <input type="text" class="form-control" id="input-direccion" placeholder="Dirección del empleado">
-        </div>
-        <button class="btn btn-primary">Agregar</button>
+        <form id="form-agregar">
+            <div class="form-group">
+                <label for="nombre">Nombre:</label>
+                <input type="text" class="form-control" id="nombre" placeholder="Ejemplo: Juan" required>
+            </div>
+            <div class="form-group">
+                <label for="apellidos">Apellidos:</label>
+                <input type="text" class="form-control" id="apellidos" placeholder="Ejemplo: Pérez Gómez" required>
+            </div>
+            <div class="form-group">
+                <label for="telefono">Teléfono:</label>
+                <input type="text" class="form-control" id="telefono" placeholder="Ejemplo: 4421234567" required>
+            </div>
+            <div class="form-group">
+                <label for="correo">Correo:</label>
+                <input type="email" class="form-control" id="correo" placeholder="Ejemplo: correo@dominio.com" required>
+            </div>
+            <div class="form-group">
+                <label for="direccion">Dirección:</label>
+                <input type="text" class="form-control" id="direccion" placeholder="Ejemplo: Calle 123, Colonia" required>
+            </div>
+            <div class="form-group">
+                <label for="fecha_nacimiento">Fecha de nacimiento:</label>
+                <input type="date" class="form-control" id="fecha_nacimiento" required>
+                <small class="form-text text-muted">Formato: AAAA-MM-DD</small>
+            </div>
+            <div class="form-group">
+                <label for="curp">CURP:</label>
+                <input type="text" class="form-control" id="curp" maxlength="18" placeholder="Ejemplo: GARC800101HDFABC01" required>
+            </div>
+            <div class="form-group">
+                <label for="rfc">RFC:</label>
+                <input type="text" class="form-control" id="rfc" maxlength="13" placeholder="Ejemplo: GARC800101ABC" required>
+            </div>
+            <div class="form-group">
+                <label for="horario">Horario:</label>
+                <input type="text" class="form-control" id="horario" placeholder="Ejemplo: 13:00 - 21:00" required>
+                <small class="form-text text-muted">Formato: HH:MM - HH:MM</small>
+            </div>
+            <div class="form-group">
+                <label for="sueldo">Sueldo:</label>
+                <input type="number" step="0.01" class="form-control" id="sueldo" placeholder="Ejemplo: 8500.50" required>
+            </div>
+            <div class="form-group">
+                <label for="puesto">Puesto (Área):</label>
+                <select class="form-control" id="puesto" required>
+                    <option value="">Selecciona un puesto</option>
+                    <option>Departamento de Energías Renovables</option>
+                    <option>Área Auxiliar</option>
+                    <option>Departamento Juridico</option>
+                    <option>Obra Civil</option>
+                    <option>Área administrativa</option>
+                    <option>Área contable</option>
+                    <option>Área de ingeniería y nuevos proyectos</option>
+                    <option>Área impacto vial</option>
+                    <option>Área de medio ambiente y protección civil</option>
+                    <option>Coordinación de impacto ambiental</option>
+                    <option>Coordinacion de Proteccion Civil</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="antiguedad">Antigüedad (años):</label>
+                <input type="number" class="form-control" id="antiguedad" placeholder="Ejemplo: 3" required>
+            </div>
+
+            <div id="mensaje"></div>
+            <button type="submit" class="btn btn-primary">Agregar</button>
+        </form>
     </div>
     <script src="./js/addemployees.js"></script>
 </body>
+
 </html>

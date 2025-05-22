@@ -1,21 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Eliminar Empleado</title>
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Eliminar Empleado</title>
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+  <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script src="./js/pdfEmpleado.js"></script>
+  <script src="./js/deleteemployees.js"></script>
 </head>
+
 <body>
-    <div class="container mt-5">
-        <h1>Eliminar Empleado</h1>
-        <div class="form-group">
-            <label for="id">ID del Empleado:</label>
-            <input type="number" class="form-control" id="input-id" placeholder="ID del empleado">
-        </div>
-        <button class="btn btn-danger">Eliminar</button>
+  <!-- Header de navegación -->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+    <a class="navbar-brand font-weight-bold" href="admin.html">Panel Admin</a>
+    <div>
+      <button class="btn btn-outline-primary mr-2" onclick="window.location.href='addemployees.html'">Agregar
+        Empleado</button>
+      <button class="btn btn-outline-primary mr-2" onclick="window.location.href='showemployees.html'">Ver
+        Empleados</button>
+      <button class="btn btn-outline-primary mr-2" onclick="window.location.href='searchname.html'">Buscar por
+        Nombre</button>
+      <button class="btn btn-outline-primary mr-2" onclick="window.location.href='editemployees.html'">Modificar
+        Empleado</button>
+      <button class="btn btn-outline-primary mr-2" onclick="window.location.href='deleteemployees.html'">Eliminar
+        Empleado</button>
     </div>
-    <script src="./js/deleteemployees.js"></script>
+  </nav>
+
+  <div class="container mt-5">
+    <h1>Eliminar Empleado</h1>
+    <div class="form-group">
+      <label for="id">ID del Empleado:</label>
+      <input type="number" class="form-control" id="input-id" placeholder="ID del empleado">
+    </div>
+    <button class="btn btn-info mb-3" id="btn-buscar">Buscar Empleado</button>
+    <div id="employee-card"></div>
+  </div>
+  <script src="./js/deleteemployees.js"></script>
 </body>
+
 </html>

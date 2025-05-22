@@ -1,12 +1,8 @@
 window.onload = init;
 
 function init() {
-    if(localStorage.getItem("token")){
+    // Siempre agrega el event listener al botón "Entrar"
     document.querySelector('.btn-primary').addEventListener('click', login);
-    }
-    else {
-        window.location.href ="index.html";
-    }
 }
 
 function login() {
@@ -20,14 +16,15 @@ function login() {
             username: name,
             password: pass
         }
-    }).then(function(res) {
+    }).then(function (res) {
         if (res.data.code === 200) {
             localStorage.setItem("token", res.data.message);
             window.location.href = "admin.html";
         } else {
-            alert("Usuario y/o contraseña incorrectos");
+            alert(res.data.message || "Usuario y/o contraseña incorrectos");
         }
-    }).catch(function(err) {
+    }).catch(function (err) {
+        alert(err.response?.data?.message || "Error de autenticación");
         console.log(err);
     });
 }

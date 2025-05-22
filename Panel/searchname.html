@@ -8,21 +8,59 @@
     <title>Buscar Empleado</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="./js/pdfEmpleado.js"></script>
+    <script src="./js/searchname.js" defer></script>
 </head>
 
 <body>
+    <!-- Header de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+        <a class="navbar-brand font-weight-bold" href="admin.html">Panel Admin</a>
+        <div>
+            <button class="btn btn-outline-primary mr-2" onclick="window.location.href='addemployees.html'">Agregar
+                Empleado</button>
+            <button class="btn btn-outline-primary mr-2" onclick="window.location.href='showemployees.html'">Ver
+                Empleados</button>
+            <button class="btn btn-outline-primary mr-2" onclick="window.location.href='searchname.html'">Buscar por
+                Nombre</button>
+            <button class="btn btn-outline-primary mr-2" onclick="window.location.href='editemployees.html'">Modificar
+                Empleado</button>
+            <button class="btn btn-outline-primary mr-2" onclick="window.location.href='deleteemployees.html'">Eliminar
+                Empleado</button>
+        </div>
+    </nav>
+
     <div class="container mt-5">
         <h1>Buscar Empleado</h1>
         <div class="form-group">
             <label for="input-nombre">Nombre del Empleado</label>
-            <input type="text" class="form-control" id="input-nombre" placeholder="Ingresa el nombre del empleado">
+            <input type="text" class="form-control" id="input-nombre" placeholder="Ejemplo: Juan">
+        </div>
+        <div class="form-group">
+            <label for="input-id">ID del Empleado</label>
+            <input type="number" class="form-control" id="input-id" placeholder="Ejemplo: 1">
+        </div>
+        <div class="form-group">
+            <label for="input-puesto">Área/Puesto</label>
+            <select class="form-control" id="input-puesto">
+                <option value="">Selecciona un área</option>
+                <option>Departamento de Energías Renovables</option>
+                <option>Área Auxiliar</option>
+                <option>Departamento Juridico</option>
+                <option>Obra Civil</option>
+                <option>Área administrativa</option>
+                <option>Área contable</option>
+                <option>Área de ingeniería y nuevos proyectos</option>
+                <option>Área impacto vial</option>
+                <option>Área de medio ambiente y protección civil</option>
+                <option>Coordinación de impacto ambiental</option>
+                <option>Coordinacion de Proteccion Civil</option>
+            </select>
         </div>
         <button class="btn btn-primary" id="search-button">Buscar</button>
-
         <div id="employee-details" class="mt-4"></div>
     </div>
-
-    <script src="./js/searchname.js" defer></script>
 </body>
 
 </html>

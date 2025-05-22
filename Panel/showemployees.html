@@ -7,17 +7,29 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Empleados</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="./js/pdfEmpleado.js"></script>
+    <script src="./js/showemployees.js" defer></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 </head>
 
 <body>
+    <!-- Header de navegación -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light mb-4">
+      <a class="navbar-brand font-weight-bold" href="admin.html">Panel Admin</a>
+      <div>
+        <button class="btn btn-outline-primary mr-2" onclick="window.location.href='addemployees.html'">Agregar Empleado</button>
+        <button class="btn btn-outline-primary mr-2" onclick="window.location.href='showemployees.html'">Ver Empleados</button>
+        <button class="btn btn-outline-primary mr-2" onclick="window.location.href='searchname.html'">Buscar por Nombre</button>
+        <button class="btn btn-outline-primary mr-2" onclick="window.location.href='editemployees.html'">Modificar Empleado</button>
+        <button class="btn btn-outline-primary mr-2" onclick="window.location.href='deleteemployees.html'">Eliminar Empleado</button>
+      </div>
+    </nav>
+
     <div class="container mt-5">
         <h1>Empleados</h1>
-        <button class="btn btn-primary mx-3" onclick="window.location.href='searchname.html'">Busqueda de empleado por nombre</button>
+        <button class="btn btn-primary mr-3" onclick="window.location.href='searchname.html'">Busqueda de empleado por nombre</button>
         <div id="employee-list" class="mt-4"></div>
     </div>
-
-    <script src="./js/showemployees.js" defer></script>
 </body>
-
 </html>
