@@ -10,7 +10,8 @@
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
     <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
-    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>   
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./js/asistencias.js"></script>
     <style>
         .btn-menu {
             min-width: 220px;
@@ -18,7 +19,8 @@
         }
     </style>
 </head>
-<body> 
+
+<body>
     <div class="container mt-5">
         <div class="row align-items-center">
             <div class="col-12 text-center mb-4">
@@ -28,16 +30,70 @@
 
         <div class="row">
             <div class="col-12 d-flex flex-column align-items-center">
-                <button class="btn btn-primary btn-menu" onclick="window.location.href='addemployees.html'">Agregar Empleado</button>
-                <button class="btn btn-primary btn-menu" onclick="window.location.href='editemployees.html'">Modificar Empleado</button>
-                <button class="btn btn-primary btn-menu" onclick="window.location.href='showemployees.html'">Mostrar empleados</button>
-                <button class="btn btn-danger btn-menu" onclick="window.location.href='deleteemployees.html'">Eliminar Empleado</button>
+                <button class="btn btn-primary btn-menu" onclick="window.location.href='addemployees.html'">Agregar
+                    Empleado</button>
+                <button class="btn btn-primary btn-menu" onclick="window.location.href='editemployees.html'">Modificar
+                    Empleado</button>
+                <button class="btn btn-primary btn-menu" onclick="window.location.href='showemployees.html'">Mostrar
+                    empleados</button>
+                <button class="btn btn-success mb-3" onclick="registrarAsistenciaTodos()">Registrar asistencia a
+                    todos</button>
+                <button class="btn btn-danger btn-menu" onclick="window.location.href='deleteemployees.html'">Eliminar
+                    Empleado</button>
+                <button class="btn btn-primary btn-menu" id="btn-pagar-nomina-todos">Pagar nómina a todos</button>
                 <button class="btn btn-secondary btn-menu">Salir</button>
             </div>
         </div>
+
+        <!-- Sección para registrar un nuevo administrador -->
+        <div class="row mt-5">
+            <div class="col-12 col-md-6 offset-md-3">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title text-center">Registrar nuevo administrador</h5>
+                        <form id="form-admin-register">
+                            <div class="form-group">
+                                <label for="admin-username">Usuario</label>
+                                <input type="text" class="form-control" id="admin-username" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="admin-password">Contraseña</label>
+                                <input type="password" class="form-control" id="admin-password" required>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-block">Registrar</button>
+                        </form>
+                        <div id="admin-register-msg" class="mt-2"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-    
-    <script src="./js/admin.js"></script> 
+
+    <!-- Modal de confirmación de contraseña -->
+    <div class="modal fade" id="modalConfirmarPago" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalLabel">Confirmar pago de nómina</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Introduce tu contraseña para confirmar el pago de nómina a todos los empleados:</p>
+                    <input type="password" class="form-control" id="input-confirm-password" placeholder="Contraseña">
+                    <div id="msg-pago-nomina" class="mt-2"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btn-confirmar-pago">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="./js/admin.js"></script>
     <script>
         // Redirige a login si no hay token
         if (!localStorage.getItem("token")) {
@@ -45,12 +101,46 @@
         }
 
         // Botón salir: borra el token y redirige
-        document.addEventListener("DOMContentLoaded", function() {
-            document.querySelector('.btn-secondary.btn-menu').addEventListener('click', function() {
+        document.addEventListener("DOMContentLoaded", function () {
+            document.querySelector('.btn-secondary.btn-menu').addEventListener('click', function () {
                 localStorage.removeItem("token");
                 window.location.href = "login.html";
             });
         });
+
+        document.getElementById('form-admin-register').addEventListener('submit', function (e) {
+            e.preventDefault();
+            const username = document.getElementById('admin-username').value.trim();
+            const password = document.getElementById('admin-password').value.trim();
+            const msgDiv = document.getElementById('admin-register-msg');
+            msgDiv.innerHTML = "";
+
+            if (!username || !password) {
+                msgDiv.innerHTML = '<div class="alert alert-warning">Llena todos los campos.</div>';
+                return;
+            }
+
+            // Ejemplo para registrar un nuevo admin desde el frontend
+            axios({
+                method: 'post',
+                url: 'http://localhost:3000/users/register',
+                data: {
+                    username: username,
+                    password: password
+                },
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                }
+            })
+                .then(function (res) {
+                    msgDiv.innerHTML = '<div class="alert alert-success">Usuario registrado correctamente.</div>';
+                    document.getElementById('form-admin-register').reset();
+                })
+                .catch(function (err) {
+                    msgDiv.innerHTML = '<div class="alert alert-danger">Error al registrar: ' + (err.response?.data?.message || 'Intenta con otro usuario') + '</div>';
+                });
+        });
     </script>
 </body>
+
 </html>

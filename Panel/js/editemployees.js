@@ -22,21 +22,21 @@ function buscarEmpleado() {
             Authorization: `Bearer ${localStorage.getItem("token")}`
         }
     })
-    .then(function(res) {
-        let employee = res.data.message;
-        if (Array.isArray(employee)) employee = employee[0];
-        if (employee) {
-            mostrarFormularioEdicion(employee);
-        } else {
+        .then(function (res) {
+            let employee = res.data.message;
+            if (Array.isArray(employee)) employee = employee[0];
+            if (employee) {
+                mostrarFormularioEdicion(employee);
+            } else {
+                mostrarMensaje("No se encontró el empleado.");
+            }
+            document.getElementById("input-id").value = ""; // Limpiar el input después de buscar
+        })
+        .catch(function (err) {
             mostrarMensaje("No se encontró el empleado.");
-        }
-        document.getElementById("input-id").value = ""; // Limpiar el input después de buscar
-    })
-    .catch(function(err) {
-        mostrarMensaje("No se encontró el empleado.");
-        console.error("Error en la solicitud: ", err);
-        document.getElementById("input-id").value = ""; // Limpiar también si hay error
-    });
+            console.error("Error en la solicitud: ", err);
+            document.getElementById("input-id").value = ""; // Limpiar también si hay error
+        });
 }
 
 function mostrarFormularioEdicion(employee) {
@@ -87,8 +87,21 @@ function mostrarFormularioEdicion(employee) {
                         <input type="number" step="0.01" class="form-control" id="input-sueldo" value="${employee.sueldo}">
                     </div>
                     <div class="form-group">
-                        <label for="input-puesto">Puesto/Área:</label>
-                        <input type="text" class="form-control" id="input-puesto" value="${employee.puesto}">
+                        <label for="puesto">Puesto (Área):</label>
+                        <select class="form-control" id="puesto" required>
+                            <option value="">Selecciona un puesto</option>
+                            <option ${employee.puesto === 'Departamento de Energías Renovables' ? 'selected' : ''}>Departamento de Energías Renovables</option>
+                            <option ${employee.puesto === 'Área Auxiliar' ? 'selected' : ''}>Área Auxiliar</option>
+                            <option ${employee.puesto === 'Departamento Juridico' ? 'selected' : ''}>Departamento Juridico</option>
+                            <option ${employee.puesto === 'Obra Civil' ? 'selected' : ''}>Obra Civil</option>
+                            <option ${employee.puesto === 'Área administrativa' ? 'selected' : ''}>Área administrativa</option>
+                            <option ${employee.puesto === 'Área contable' ? 'selected' : ''}>Área contable</option>
+                            <option ${employee.puesto === 'Área de ingeniería y nuevos proyectos' ? 'selected' : ''}>Área de ingeniería y nuevos proyectos</option>
+                            <option ${employee.puesto === 'Área impacto vial' ? 'selected' : ''}>Área impacto vial</option>
+                            <option ${employee.puesto === 'Área de medio ambiente y protección civil' ? 'selected' : ''}>Área de medio ambiente y protección civil</option>
+                            <option ${employee.puesto === 'Coordinación de impacto ambiental' ? 'selected' : ''}>Coordinación de impacto ambiental</option>
+                            <option ${employee.puesto === 'Coordinacion de Proteccion Civil' ? 'selected' : ''}>Coordinacion de Proteccion Civil</option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label for="input-antiguedad">Antigüedad (años):</label>
@@ -99,7 +112,7 @@ function mostrarFormularioEdicion(employee) {
             </div>
         </div>
     `;
-    document.getElementById('btn-modificar').onclick = function() {
+    document.getElementById('btn-modificar').onclick = function () {
         editemployees(employee.id, employee);
     };
 }
@@ -133,15 +146,15 @@ function editemployees(employeeId, oldEmployee) {
         },
         data: updatedEmployee
     })
-    .then(function(res) {
-        if (res.data.code === 200) {
-            mostrarMensaje("Empleado actualizado correctamente.");
-        } else {
-            mostrarMensaje("Ocurrió un error al actualizar el empleado.");
-        }
-    })
-    .catch(function(err) {
-        mostrarMensaje("Error en la solicitud.");
-        console.error("Error en la solicitud: ", err);
-    });
+        .then(function (res) {
+            if (res.data.code === 200) {
+                mostrarMensaje("Empleado actualizado correctamente.");
+            } else {
+                mostrarMensaje("Ocurrió un error al actualizar el empleado.");
+            }
+        })
+        .catch(function (err) {
+            mostrarMensaje("Error en la solicitud.");
+            console.error("Error en la solicitud: ", err);
+        });
 }

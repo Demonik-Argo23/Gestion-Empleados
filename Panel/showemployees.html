@@ -7,10 +7,15 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Empleados</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="./js/pdfEmpleado.js"></script>
-    <script src="./js/showemployees.js" defer></script>
+    <script src="./js/asistencias.js"></script>
+    <script src="./js/showemployees.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <script src="./js/nominas.js"></script>
+    
 </head>
 
 <body>
@@ -31,5 +36,28 @@
         <button class="btn btn-primary mr-3" onclick="window.location.href='searchname.html'">Busqueda de empleado por nombre</button>
         <div id="employee-list" class="mt-4"></div>
     </div>
+
+    <!-- Modal de confirmación de pago individual -->
+<div class="modal fade" id="modalPagoIndividual" tabindex="-1" role="dialog" aria-labelledby="modalPagoIndividualLabel" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalPagoIndividualLabel">Confirmar pago de nómina</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <p id="texto-modal-pago-individual"></p>
+        <input type="password" class="form-control" id="input-password-pago-individual" placeholder="Contraseña">
+        <div id="msg-pago-individual" class="mt-2"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+        <button type="button" class="btn btn-primary" id="btn-confirmar-pago-individual">Confirmar</button>
+      </div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

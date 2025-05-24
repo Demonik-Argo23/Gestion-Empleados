@@ -11,6 +11,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="./js/pdfEmpleado.js"></script>
     <script src="./js/searchname.js" defer></script>
+    <script src="./js/nominas.js"></script>
+    <script src="./js/asistencias.js"></script>
 </head>
 
 <body>
@@ -61,6 +63,37 @@
         <button class="btn btn-primary" id="search-button">Buscar</button>
         <div id="employee-details" class="mt-4"></div>
     </div>
+
+    <!-- Modal de confirmación de pago individual -->
+    <div class="modal fade" id="modalPagoIndividual" tabindex="-1" role="dialog" aria-labelledby="modalPagoIndividualLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalPagoIndividualLabel">Confirmar pago de nómina</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="texto-modal-pago-individual"></p>
+                    <input type="password" class="form-control" id="input-password-pago-individual" placeholder="Contraseña">
+                    <div id="msg-pago-individual" class="mt-2"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" id="btn-confirmar-pago-individual">Confirmar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- jQuery primero -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
+    <!-- Bootstrap después -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Tus scripts después -->
+    <script src="./js/searchname.js"></script>
 </body>
 
 </html>

@@ -2,6 +2,7 @@ window.onload = init;
 
 var headers = {};
 var url = "http://localhost:3000/";
+let empleadoIdPago = null;
 
 function init() {
     if (localStorage.getItem("token")) {
@@ -17,7 +18,7 @@ function init() {
 }
 
 function loadEmployees() {
-    axios.get(url + "employees", headers)
+    axios.get(url + "employees/search", headers)
         .then(function (res) {
             console.log("Respuesta de la API:", res);
 
@@ -44,7 +45,19 @@ function displayEmployees(employees) {
         const cardId = `card-${employee.id}`;
         const pageId = `page-${employee.id}`;
         var employeeCard = document.createElement("div");
+        employeeCard.id = cardId;
         employeeCard.classList.add("card", "mb-3");
+        employeeCard.style.border = "2px solid #ccc";
+
+        // Consulta la asistencia de hoy y cambia el borde
+        tieneAsistenciaHoy(employee.id, function(asistio) {
+            if (asistio) {
+                employeeCard.style.border = "3px solid #28a745"; // verde
+            } else {
+                employeeCard.style.border = "3px solid #dc3545"; // rojo
+            }
+        });
+
         employeeCard.innerHTML = `
             <div class="card-body">
                 <div id="${pageId}-1">
@@ -71,8 +84,17 @@ function displayEmployees(employees) {
                         <button class="btn btn-sm btn-secondary" onclick="cambiarPaginaEmpleado('${pageId}', 2)">2</button>
                         <button class="btn btn-sm btn-secondary" onclick="cambiarPaginaEmpleado('${pageId}', 3)">3</button>
                     </div>
-                    <button class="btn btn-outline-info ml-3" onclick="generarPDFEmpleado('${employee.id}')">Ver PDF</button>
+                    <div>
+                        <button class="btn btn-success btn-sm ml-2" onclick="registrarAsistenciaIndividual(${employee.id})">Registrar asistencia hoy</button>
+                        <button class="btn btn-warning btn-sm ml-2" onclick="quitarAsistencia(${employee.id})">Quitar asistencia hoy</button>
+                        <button class="btn btn-outline-info ml-2" onclick="generarPDFEmpleado('${employee.id}')">Ver PDF</button>
+                        <button class="btn btn-outline-primary ml-2" onclick="consultarNominasEmpleado(${employee.id})">Nóminas</button>
+                        <button class="btn btn-outline-success ml-2" onclick="consultarBonosEmpleado(${employee.id})">Bonos</button>
+                        <button class="btn btn-primary btn-sm ml-2" onclick="abrirModalPagoIndividual(${employee.id}, '${employee.nombre} ${employee.apellidos}')">Pagar nómina</button>
+                    </div>
                 </div>
+                <div id="nominas-empleado-${employee.id}" class="mt-2"></div>
+                <div id="bonos-empleado-${employee.id}" class="mt-2"></div>
             </div>
         `;
         employeeList.appendChild(employeeCard);
@@ -80,9 +102,92 @@ function displayEmployees(employees) {
 }
 
 // Agrega esta función global para cambiar la "página" de la card
-window.cambiarPaginaEmpleado = function(pageId, pagina) {
+window.cambiarPaginaEmpleado = function (pageId, pagina) {
     for (let i = 1; i <= 3; i++) {
         document.getElementById(`${pageId}-${i}`).style.display = (i === pagina) ? 'block' : 'none';
     }
 };
+
+function tieneAsistenciaHoy(empleadoId, callback) {
+    const hoy = new Date();
+    const mes = hoy.getMonth() + 1;
+    const anio = hoy.getFullYear();
+    const dia = hoy.getDate();
+    axios.get(`http://localhost:3000/asistencias/${empleadoId}?mes=${mes}&anio=${anio}`, headers)
+        .then(function(res) {
+            // Busca si hay asistencia para hoy y si está presente
+            const asistencias = res.data.message;
+            const asistenciaHoy = asistencias.find(a => {
+                const fecha = new Date(a.fecha);
+                return fecha.getDate() === dia && a.presente === 1;
+            });
+            callback(!!asistenciaHoy);
+        })
+        .catch(function(err) {
+            callback(false);
+        });
+}
+
+window.abrirModalPagoIndividual = function(empleadoId, nombreCompleto) {
+    empleadoIdPago = empleadoId;
+    document.getElementById('input-password-pago-individual').value = '';
+    document.getElementById('msg-pago-individual').innerHTML = '';
+    document.getElementById('texto-modal-pago-individual').innerText = `Introduce tu contraseña para pagar la nómina de ${nombreCompleto}:`;
+    $('#modalPagoIndividual').modal('show');
+};
+
+document.addEventListener('DOMContentLoaded', function() {
+    document.getElementById('btn-confirmar-pago-individual').addEventListener('click', function() {
+        const password = document.getElementById('input-password-pago-individual').value.trim();
+        const msgDiv = document.getElementById('msg-pago-individual');
+        msgDiv.innerHTML = '';
+        if (!password) {
+            msgDiv.innerHTML = '<div class="alert alert-warning">Ingresa tu contraseña.</div>';
+            return;
+        }
+
+        // Verifica la contraseña del usuario actual
+        axios.post('http://localhost:3000/users/login', {
+            username: obtenerUsuarioActual(),
+            password: password
+        })
+        .then(function(res) {
+            if (res.data.code === 200) {
+                pagarNominaIndividual(empleadoIdPago);
+            } else {
+                msgDiv.innerHTML = '<div class="alert alert-danger">Contraseña incorrecta.</div>';
+            }
+        })
+        .catch(function() {
+            msgDiv.innerHTML = '<div class="alert alert-danger">Contraseña incorrecta.</div>';
+        });
+    });
+});
+
+function obtenerUsuarioActual() {
+    const token = localStorage.getItem("token");
+    if (!token) return "";
+    try {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.username;
+    } catch (e) {
+        return "";
+    }
+}
+
+function pagarNominaIndividual(empleadoId) {
+    const hoy = new Date();
+    const mes = hoy.getMonth() + 1;
+    const anio = hoy.getFullYear();
+    axios.post(`http://localhost:3000/nominas/generar/${empleadoId}?mes=${mes}&anio=${anio}`, {}, {
+        headers: { Authorization: `Bearer ${localStorage.getItem("token")}` }
+    })
+    .then(function(res) {
+        $('#modalPagoIndividual').modal('hide');
+        alert("Nómina pagada para el empleado.");
+    })
+    .catch(function(err) {
+        document.getElementById('msg-pago-individual').innerHTML = '<div class="alert alert-danger">Error al pagar nómina. Es posible que ya esté pagada este mes.</div>';
+    });
+}
 

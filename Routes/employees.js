@@ -2,6 +2,12 @@ const express = require('express');
 const employees = express.Router();
 const db = require('../config/database');
 
+// Middleware para deshabilitar caché
+employees.use((req, res, next) => {
+    res.set('Cache-Control', 'no-store');
+    next();
+});
+
 // Crear empleado con nuevos campos
 employees.post("/", async (req, res, next) => {
     const {
@@ -79,12 +85,6 @@ employees.patch("/:id([0-9]{1,3})", async (req, res, next) => {
 });
 
 // Obtener todos los empleados
-employees.get('/', async (req, res, next) => {
-    const gstn = await db.query("SELECT * FROM employees");
-    return res.status(200).json({ code: 1, message: gstn });
-});
-
-// Búsqueda flexible por id, nombre y/o puesto
 employees.get('/search', async (req, res, next) => {
     const { id, nombre, puesto } = req.query;
     let query = "SELECT * FROM employees WHERE 1=1";
@@ -111,13 +111,22 @@ employees.get('/search', async (req, res, next) => {
     }
 });
 
+employees.get('/', async (req, res, next) => {
+    try {
+        const rows = await db.query("SELECT * FROM employees");
+        res.json({ code: 200, message: rows });
+    } catch (err) {
+        res.status(500).json({ code: 500, message: "Error al obtener empleados", error: err });
+    }
+});
+
 // Obtener empleado por ID
 employees.get('/:id([0-9]{1,3})', async (req, res, next) => {
     const id = req.params.id;
     if (id >= 0 && id <= 722) {
-        const gstn = await db.query("SELECT * FROM employees WHERE id = ?", [id]);
-        if (gstn.length > 0) {
-            return res.status(200).json({ code: 1, message: gstn[0] });
+        const rows = await db.query("SELECT * FROM employees WHERE id = ?", [id]);
+        if (rows.length > 0) {
+            return res.status(200).json({ code: 200, message: rows[0] });
         }
         return res.status(404).json({ code: 404, message: "Empleado no encontrado" });
     } else {
@@ -125,14 +134,17 @@ employees.get('/:id([0-9]{1,3})', async (req, res, next) => {
     }
 });
 
-// Obtener empleados por nombre
-employees.get('/:name([A-Za-z]+)', async (req, res, next) => {
+// Obtener empleados por nombre exacto
+employees.get('/nombre/:name', async (req, res, next) => {
     const nombre = req.params.name;
-    const gstn = await db.query("SELECT * FROM employees WHERE nombre = ?", [nombre]);
-    if (gstn.length > 0) {
-        return res.status(200).json({ code: 1, message: gstn });
+    const rows = await db.query("SELECT * FROM employees WHERE nombre = ?", [nombre]);
+    if (rows.length > 0) {
+        return res.status(200).json({ code: 200, message: rows });
     }
     return res.status(404).json({ code: 404, message: "Empleado no encontrado" });
 });
+
+// Obtener todos los empleados (sin filtros)
+
 
 module.exports = employees;

@@ -5,24 +5,33 @@ const morgan = require('morgan');
 //Routes
 const employees = require('./Routes/employees.js');
 const users = require('./Routes/users.js');
+const asistencias = require('./Routes/asistencias.js');
+const nominas = require('./Routes/nominas.js');
 //Middleware
 const auth = require('./middleware/auth');
 const notFound = require('./middleware/notFound');
 const index = require('./middleware/index.js');
 const cors = require('./middleware/cors');
-//ya
+
+// Middleware globales
 app.use(cors);
-app.use(morgan('dev'))
+app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.get("/", index);
 
-app.use("/users", users);
+// RUTA PÚBLICA (antes de usar auth)
+app.use('/users/login', users);
 
+// Middleware de autenticación para todo lo demás
 app.use(auth);
 
-app.use("/employees", employees); 
+// RUTAS PROTEGIDAS
+app.use("/users", users); // /users/register, etc.
+app.use("/employees", employees);
+app.use("/asistencias", asistencias);
+app.use("/nominas", nominas);
 
 app.use(notFound);
 
