@@ -1,3 +1,5 @@
+import { tieneAsistenciaHoy } from './asistenciaUtils.js';
+
 window.onload = init;
 
 var headers = {};
@@ -8,7 +10,7 @@ function init() {
     if (localStorage.getItem("token")) {
         headers = {
             headers: {
-                'Authorization': "bearer " + localStorage.getItem("token")
+                'Authorization': "Bearer " + localStorage.getItem("token")
             }
         };
         loadEmployees();
@@ -50,7 +52,7 @@ function displayEmployees(employees) {
         employeeCard.style.border = "2px solid #ccc";
 
         // Consulta la asistencia de hoy y cambia el borde
-        tieneAsistenciaHoy(employee.id, function(asistio) {
+        tieneAsistenciaHoy(employee.id, headers, function(asistio) {
             if (asistio) {
                 employeeCard.style.border = "3px solid #28a745"; // verde
             } else {
@@ -107,26 +109,6 @@ window.cambiarPaginaEmpleado = function (pageId, pagina) {
         document.getElementById(`${pageId}-${i}`).style.display = (i === pagina) ? 'block' : 'none';
     }
 };
-
-function tieneAsistenciaHoy(empleadoId, callback) {
-    const hoy = new Date();
-    const mes = hoy.getMonth() + 1;
-    const anio = hoy.getFullYear();
-    const dia = hoy.getDate();
-    axios.get(`http://localhost:3000/asistencias/${empleadoId}?mes=${mes}&anio=${anio}`, headers)
-        .then(function(res) {
-            // Busca si hay asistencia para hoy y si está presente
-            const asistencias = res.data.message;
-            const asistenciaHoy = asistencias.find(a => {
-                const fecha = new Date(a.fecha);
-                return fecha.getDate() === dia && a.presente === 1;
-            });
-            callback(!!asistenciaHoy);
-        })
-        .catch(function(err) {
-            callback(false);
-        });
-}
 
 window.abrirModalPagoIndividual = function(empleadoId, nombreCompleto) {
     empleadoIdPago = empleadoId;

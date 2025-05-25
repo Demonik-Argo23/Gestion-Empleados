@@ -1,3 +1,5 @@
+import { tieneAsistenciaHoy } from './asistenciaUtils.js';
+
 window.onload = init;
 
 var headers = {};
@@ -7,7 +9,9 @@ let empleadoIdPago = null;
 function init() {
     if (localStorage.getItem("token")) {
         headers = {
-            Authorization: "Bearer " + localStorage.getItem("token")
+            headers: {
+                'Authorization': "Bearer " + localStorage.getItem("token")
+            }
         };
         document.querySelector('#search-button').addEventListener('click', searchEmployee);
     } else {
@@ -67,15 +71,13 @@ function displayEmployees(employees) {
             employeeCard.style.border = "2px solid #ccc";
 
             // Consulta la asistencia de hoy y cambia el borde
-            if (typeof tieneAsistenciaHoy === "function") {
-                tieneAsistenciaHoy(employee.id, function(asistio) {
-                    if (asistio) {
-                        employeeCard.style.border = "3px solid #28a745"; // verde
-                    } else {
-                        employeeCard.style.border = "3px solid #dc3545"; // rojo
-                    }
-                });
-            }
+            tieneAsistenciaHoy(employee.id, headers, function(asistio) {
+                if (asistio) {
+                    employeeCard.style.border = "3px solid #28a745"; // verde
+                } else {
+                    employeeCard.style.border = "3px solid #dc3545"; // rojo
+                }
+            });
 
             employeeCard.innerHTML = `
                 <div class="card-body">

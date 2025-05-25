@@ -2,6 +2,7 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan');
+const path = require('path'); // Agrega esto al inicio
 //Routes
 const employees = require('./Routes/employees.js');
 const users = require('./Routes/users.js');
@@ -9,7 +10,7 @@ const asistencias = require('./Routes/asistencias.js');
 const nominas = require('./Routes/nominas.js');
 //Middleware
 const auth = require('./middleware/auth');
-const notFound = require('./middleware/notFound');
+const notFound = require('./middleware/notfound');
 const index = require('./middleware/index.js');
 const cors = require('./middleware/cors');
 
@@ -30,8 +31,11 @@ app.use(auth);
 // RUTAS PROTEGIDAS
 app.use("/users", users); // /users/register, etc.
 app.use("/employees", employees);
-app.use("/asistencias", asistencias);
+app.use('/asistencias', require('./Routes/asistencias'));
 app.use("/nominas", nominas);
+
+// Servir archivos estáticos de la carpeta Panel
+app.use(express.static(path.join(__dirname, 'Panel')));
 
 app.use(notFound);
 

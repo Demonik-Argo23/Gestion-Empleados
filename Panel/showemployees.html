@@ -12,10 +12,8 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="./js/pdfEmpleado.js"></script>
     <script src="./js/asistencias.js"></script>
-    <script src="./js/showemployees.js"></script>
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="./js/nominas.js"></script>
-    
 </head>
 
 <body>
@@ -25,7 +23,7 @@
       <div>
         <button class="btn btn-outline-primary mr-2" onclick="window.location.href='addemployees.html'">Agregar Empleado</button>
         <button class="btn btn-outline-primary mr-2" onclick="window.location.href='showemployees.html'">Ver Empleados</button>
-        <button class="btn btn-outline-primary mr-2" onclick="window.location.href='searchname.html'">Buscar por Nombre</button>
+        <button class="btn btn-outline-primary mr-2" onclick="window.location.href='searchname.html'">Buscar Empleado</button>
         <button class="btn btn-outline-primary mr-2" onclick="window.location.href='editemployees.html'">Modificar Empleado</button>
         <button class="btn btn-outline-primary mr-2" onclick="window.location.href='deleteemployees.html'">Eliminar Empleado</button>
       </div>
@@ -33,31 +31,34 @@
 
     <div class="container mt-5">
         <h1>Empleados</h1>
-        <button class="btn btn-primary mr-3" onclick="window.location.href='searchname.html'">Busqueda de empleado por nombre</button>
+        <button class="btn btn-primary mr-3" onclick="window.location.href='searchname.html'">Buscar Empleado</button>
         <div id="employee-list" class="mt-4"></div>
     </div>
 
     <!-- Modal de confirmación de pago individual -->
-<div class="modal fade" id="modalPagoIndividual" tabindex="-1" role="dialog" aria-labelledby="modalPagoIndividualLabel" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalPagoIndividualLabel">Confirmar pago de nómina</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <p id="texto-modal-pago-individual"></p>
-        <input type="password" class="form-control" id="input-password-pago-individual" placeholder="Contraseña">
-        <div id="msg-pago-individual" class="mt-2"></div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
-        <button type="button" class="btn btn-primary" id="btn-confirmar-pago-individual">Confirmar</button>
+    <div class="modal fade" id="modalPagoIndividual" tabindex="-1" role="dialog" aria-labelledby="modalPagoIndividualLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalPagoIndividualLabel">Confirmar pago de nómina</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Cerrar">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p id="texto-modal-pago-individual"></p>
+            <input type="password" class="form-control" id="input-password-pago-individual" placeholder="Contraseña">
+            <div id="msg-pago-individual" class="mt-2"></div>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-primary" id="btn-confirmar-pago-individual">Confirmar</button>
+          </div>
+        </div>
       </div>
     </div>
-  </div>
-</div>
+    
+    <!-- Important: Add the showemployees.js script at the end of the body -->
+    <script type="module" src="./js/showemployees.js"></script>
 </body>
 </html>
