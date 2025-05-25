@@ -20,6 +20,8 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
+app.use(express.static(path.join(__dirname, 'Panel')));
+
 app.get('/', (req, res) => {
     res.redirect('/login.html');
 });
