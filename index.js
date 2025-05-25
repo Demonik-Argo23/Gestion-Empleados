@@ -20,7 +20,9 @@ app.use(morgan('dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.get("/", index);
+app.get('/', (req, res) => {
+    res.redirect('/login.html');
+});
 
 // RUTA PÚBLICA (antes de usar auth)
 app.use('/users/login', users);
